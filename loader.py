@@ -36,10 +36,10 @@ class DataLoader():
         c = 0
         for business in self.alldata():
             c += 1
-            if u"Restaurants" in business.categories:
-                label = "Restaurants"
+            if u"Cinema" in business.categories:
+                label = "Cinema"
             else:
-                label = "Not Restaurants"
+                label = "NotCinema"
 
             r.append(Record(business.business_id, "".join(business.reviews), label))
             if c>100:
