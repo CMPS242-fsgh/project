@@ -10,8 +10,8 @@ Record = collections.namedtuple('Record', ['business_id', 'reviews', 'categories
 class DataLoader():
     def __init__(self):
         self._conn = sqlite3.connect(database)
-        self._datasize = self._conn.execute('SELECT count(business_id) FROM business;').fetchone()[0]
-        print "{0} business loaded".format(self._datasize)
+        self.datasize = self._conn.execute('SELECT count(business_id) FROM business;').fetchone()[0]
+        print "{0} business loaded".format(self.datasize)
 
     def alldata(self):
         sql = 'SELECT business_id, cat FROM business;'
@@ -22,6 +22,14 @@ class DataLoader():
                 l.append(content[0])
 
             yield Record(business_id, l, json.loads(cat)['list'])
+
+    def data_as_list(self, n):
+        r = []
+        for i, record in enumerate(self.alldata()):
+            r.append(record)
+            if i > n:
+                break
+        return r
 
     def first_100(self):
         r = []
@@ -36,6 +44,11 @@ class DataLoader():
             r.append(Record(business.business_id, "".join(business.reviews), label))
             if c>100:
                 return r
+
+    def count_cat(self, cat):
+        sql = 'SELECT count(business_id) FROM business WHERE cat LIKE ?'
+        n = self._conn.execute(sql, ("%"+cat+"%",)).fetchone()[0]
+        return n
 
 if __name__ == '__main__':
     d = DataLoader()
