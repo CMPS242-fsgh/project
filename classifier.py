@@ -354,7 +354,7 @@ class DataLoaderFromFile(DataLoader):
 				sent = sent.strip()
 				self._dataset.append([cat, str(sent)])
 		fp.close()
-		random.shuffle(self._dataset)	
+		#random.shuffle(self._dataset)	
 		self._D_SIZE = len(self._dataset)
 
 	def loadTrainingData(self, trainFile):
@@ -443,6 +443,7 @@ if __name__ == "__main__":
 		data = DataLoaderFromDir()
 	
 	data.readData(filename)
+	results_file = open(filename+"_predictions", "w")
 
 	data.settrainSIZE(70)
 	#data.settrainSIZE(100)
@@ -515,8 +516,8 @@ if __name__ == "__main__":
 		#print(str(line)+" : "+str(best_label)+" (predicted)")
 		#if(str(best_label)!= actual_labels[i]):
 			#print(str(line)+" : "+str(best_label)+" (predicted)"+" "+actual_labels[i]+" (actual)")
+		results_file.write(str(actual_labels[i])+"\t"+str(pred_labels_nb[i])+"\n")
 		i=i+1
-
 	acc = nbClassifier.getAccuracy(actual_labels, pred_labels_nb)
 	print("The accuracy of the classifier is: "+str(acc))
 	
@@ -528,7 +529,7 @@ if __name__ == "__main__":
 	#print(confMatrix)
 	
 
-	
+	results_file.close()
 
 
 
