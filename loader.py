@@ -23,6 +23,19 @@ class DataLoader():
 
             yield Record(business_id, l, json.loads(cat)['list'])
 
+    def first_100(self):
+        r = []
+        c = 0
+        for business in self.alldata():
+            c += 1
+            if u"Restaurants" in business.categories:
+                label = "Restaurants"
+            else:
+                label = "Not Restaurants"
+
+            r.append(Record(business.business_id, "".join(business.reviews), label))
+            if c>100:
+                return r
 
 if __name__ == '__main__':
     d = DataLoader()
