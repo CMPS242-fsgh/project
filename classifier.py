@@ -354,7 +354,7 @@ class DataLoaderFromFile(DataLoader):
 				sent = sent.strip()
 				self._dataset.append([cat, str(sent)])
 		fp.close()
-		random.shuffle(self._dataset)	
+		#random.shuffle(self._dataset)	
 		self._D_SIZE = len(self._dataset)
 
 	def loadTrainingData(self, trainFile):
