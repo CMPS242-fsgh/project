@@ -1,8 +1,8 @@
 import loader, sys
 from pprint import pprint
 
-out_life = sys.argv[1]
-fp = open(out_file, "w")
+#out_life = sys.argv[1]
+fp = open("yelp_data.cinema", "w")
 
 if __name__ == '__main__':
 	d = loader.DataLoader()
