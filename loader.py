@@ -28,13 +28,15 @@ class DataLoader():
         c = 0
         for business in self.alldata():
             c += 1
-            if u"Cinema" in business.categories:
-                label = "Cinema"
+            if u"Pizza" in business.categories:
+                label = "Pizza"
             else:
-                label = "NotCinema"
-
+                label = "NotPizza"
+	    '''if(c > 70 and c <= 100):
+		print(str(business.categories)+"\n")
+	    '''
             r.append(Record(business.business_id, "".join(business.reviews), label))
-            if c>100:
+            if c>=100:
                 return r
 
 if __name__ == '__main__':
