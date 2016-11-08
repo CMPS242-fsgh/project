@@ -15,8 +15,9 @@ class DataLoader():
 
     def alldata(self):
         sql = 'SELECT business_id, cat FROM business;'
-        l = []
+        #l = []
         for business_id, cat in self._conn.execute(sql):
+            l = []
             sql = 'SELECT content FROM review WHERE business_id=?'
             for content in self._conn.execute(sql, (business_id,)):
                 l.append(content[0])
@@ -34,16 +35,20 @@ class DataLoader():
     def first_100(self):
         r = []
         c = 0
+        nr = 0
         for business in self.alldata():
             c += 1
-            if u"Pizza" in business.categories:
-                label = "Pizza"
+            if u"Grocery" in business.categories:
+                label = "Grocery"
             else:
-                label = "NotPizza"
+                label = "Not"
 	    '''if(c > 70 and c <= 100):
 		print(str(business.categories)+"\n")
 	    '''
             r.append(Record(business.business_id, "".join(business.reviews), label))
+            #print(business.reviews)
+            nr += len(business.reviews)
+            #print nr
             if c>=100:
                 return r
 
