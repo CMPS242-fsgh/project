@@ -6,18 +6,20 @@ from stopwords import stopwords
 class CountFeature:
     def __init__(self, voc = None, use_stopwords = True, limit = 0):
         self._limit = limit
+        self.use_stopwords = use_stopwords
         if not voc:
             self._new_vocab = True
             self.vocab = dict()
-            self.use_stopwords = use_stopwords
         else:
             self._new_vocab = False
             self.vocab = voc
 
     def splitter(self, doc):
         for word in doc.split():
-            if self.use_stopwords and word not in stopwords:
-                yield word
+            #print word, word in stopwords
+            if self.use_stopwords:
+                if word not in stopwords:
+                    yield word
             else:
                 yield word
 
@@ -40,6 +42,7 @@ class CountFeature:
         for doc in it:
             feature_count = dict()
             for token in self.splitter(doc):
+                #print token
                 idx = self.lookup_vocabulary(token)
                 if idx < 0:
                     continue
@@ -64,10 +67,12 @@ class CountFeature:
 
 
 if __name__=='__main__':
-    f = CountFeature()
+    f = CountFeature(use_stopwords=True)
     dataset = [
-        "Hello World Hello",
-        "Good Luck"
+        "Hello World Hello a",
+        "Good Luck",
+        "a"
     ]
     X = f.transform(dataset)
     print X.toarray()
+    print f.vocab

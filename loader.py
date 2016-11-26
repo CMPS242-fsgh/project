@@ -57,18 +57,19 @@ class DataLoader():
         nr = 0
         for business in self.alldata():
             c += 1
-            if u"Grocery" in business.categories:
-                label = "Grocery"
+            if u"Shopping" in business.categories:
+                label = "Restaurant"
             else:
                 label = "Not"
 	    '''if(c > 70 and c <= 100):
 		print(str(business.categories)+"\n")
 	    '''
             r.append(Record(business.business_id, "".join(business.reviews), label))
-            #print(business.reviews)
+            print(len(business.reviews))
             nr += len(business.reviews)
             #print nr
             if c>=100:
+                print nr
                 return r
 
     def count_cat(self, cat):
