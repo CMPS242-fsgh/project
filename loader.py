@@ -24,6 +24,25 @@ class DataLoader():
 
             yield Record(business_id, l, json.loads(cat)['list'])
 
+    def binary_producer(self, n, y, cat):
+        g = self.alldata()
+        def iter_d():
+            c = 0
+            for business in g:
+                if c % 1000 == 0:
+                    print c, '/', n
+                if c<n:
+                    if cat.decode('utf-8') in business.categories:
+                        y[c] = 1
+                    else:
+                        y[c] = 0
+                    yield "".join(business.reviews)
+                else:
+                    return
+                c += 1
+
+        return iter_d
+
     def data_as_list(self, n):
         r = []
         for i, record in enumerate(self.alldata()):

@@ -1,3 +1,6 @@
+'''
+a simple script to store yelp data into sqlite database
+'''
 
 import json
 import sqlite3
