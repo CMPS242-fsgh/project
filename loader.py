@@ -41,7 +41,7 @@ class DataLoader():
                     return
                 c += 1
 
-        return iter_d
+        return iter_d()
 
     def data_as_list(self, n):
         r = []

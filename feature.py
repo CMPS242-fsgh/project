@@ -5,6 +5,9 @@ from stopwords import stopwords
 
 class CountFeature:
     def __init__(self, voc = None, use_stopwords = True, limit = 0):
+        if limit > 0:
+            raise "Not Implemented"
+
         self._limit = limit
         self.use_stopwords = use_stopwords
         if not voc:
@@ -17,6 +20,7 @@ class CountFeature:
     def splitter(self, doc):
         for word in doc.split():
             #print word, word in stopwords
+            word = word.lower()
             if self.use_stopwords:
                 if word not in stopwords:
                     yield word
@@ -57,12 +61,13 @@ class CountFeature:
             ind_ptr.append(len(indices))
 
         indices = np.asarray(indices, dtype=np.intc)
-        values = np.asarray(values, dtype = np.intc)
+        values = np.asarray(values, dtype = np.float32)
         ind_ptr = np.asarray(ind_ptr, dtype = np.intc)
         X = sparse.csr_matrix((values, indices, ind_ptr),
                               shape=(len(ind_ptr) - 1, len(self.vocab)),
-                              dtype=np.intc)
+                              dtype=np.float32)
         X.sort_indices()
+        #print self.vocab
         return X
 
 
