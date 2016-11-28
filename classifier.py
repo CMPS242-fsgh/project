@@ -36,7 +36,7 @@ from sklearn.utils.fixes import expit
 from sklearn.utils.optimize import newton_cg
 
 class LogisticRegression:
-    def __init__(self, lbd = 0.5):
+    def __init__(self, lbd = 1.):
         self._w = None
         self._lbd = lbd
 
@@ -59,17 +59,24 @@ class LogisticRegression:
         def _loss(w):
             z = self._intercept_dot(w, X)
             #loss = scipy.dot(y, scipy.log(sigmoid(z))) + scipy.dot(1-y, scipy.log(1-sigmoid(z)))
-            loss = scipy.sum(log_logistic(y_bin * z))
-            return -loss+self._lbd*scipy.dot(w,w)
+            #print (y * scipy.logaddexp(0., -z))
+            #print scipy.log(sigmoid(z))
+            #print "---"
+            loss = scipy.sum(y * scipy.logaddexp(0., -z) + (1-y)*scipy.logaddexp(0., z))
+            return loss+self._lbd/2*scipy.dot(w,w)
 
         def _grad(w):
             z = self._intercept_dot(w, X)
+            z = expit(z)
             grad = np.empty_like(w)
-            z = expit(y_bin * z)
-            z0 = (z - 1) * y
-            #print safe_sparse_dot(X.T, z0).shape
-            grad[:n_features] = safe_sparse_dot(X.T, z0) + self._lbd * 2 * w[:n_features]
-            grad[-1] = z0.sum()
+            #z = expit(y_bin * z)
+            #z0 = (z - 1) * y_bin
+            #print X.T.toarray()
+            #print (z-y)
+            #print X.T*(z-y)
+            #print '---'
+            grad[:n_features] = X.T * (z - y) + self._lbd*w[:-1]
+            grad[-1] = scipy.sum(z - y) + self._lbd*w[-1]
             return grad
 
         def _hess(w):
@@ -84,22 +91,28 @@ class LogisticRegression:
                 ret[-1] += d.sum() * s[-1]
             return ret
 
+
+        #opt = scipy.optimize.minimize(_loss, scipy.ones(n_features + 1), method='Powell', jac=_grad)
+        #print opt['x']
         opt = scipy.optimize.minimize(_loss, scipy.ones(n_features + 1), method='Newton-CG', jac=_grad)
+        #print opt['x']
         #print opt
         #print X.shape, np.hstack([X, np.ones(n_data)]).shape
         self._w = opt['x']
 
     def predict(self, x):
         z = self._intercept_dot(self._w, x)
-        return sigmoid(z), 1 - sigmoid(z)
+        return expit(z), 1-expit(z)
 
     def predict_many(self, X):
-        Z = sigmoid(self._intercept_dot(self._w, X))
-        return Z[Z>0.5]
+        Z = expit(self._intercept_dot(self._w, X))
+        return Z
 
     def validate(self, X, y):
-        Z = scipy.sign(self.predict_many(X))
-        return Z.sum()
+        mask = self.predict_many(X) > 0.5
+        Z = scipy.zeros(y.shape)
+        Z[mask] = 1
+        return (Z == y).sum()
 
 if __name__ == '__main__':
     import loader

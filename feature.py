@@ -4,12 +4,16 @@ import numpy as np
 from stopwords import stopwords
 
 class CountFeature:
-    def __init__(self, voc = None, use_stopwords = True, limit = 0):
+    def __init__(self, voc = None, use_stopwords = True, limit = 0, splitter = None):
         if limit > 0:
             raise "Not Implemented"
 
         self._limit = limit
         self.use_stopwords = use_stopwords
+        if splitter:
+            self.splitter = splitter
+        else:
+            self.splitter = self._splitter
         if not voc:
             self._new_vocab = True
             self.vocab = dict()
@@ -17,7 +21,7 @@ class CountFeature:
             self._new_vocab = False
             self.vocab = voc
 
-    def splitter(self, doc):
+    def _splitter(self, doc):
         for word in doc.split():
             #print word, word in stopwords
             word = word.lower()
