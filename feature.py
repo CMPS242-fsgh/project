@@ -40,6 +40,9 @@ class CountFeature:
             else:
                 return -1
 
+    def fit_transform(self, it):
+        return self.transform(it)
+
     def transform(self, it):
         indices = []
         ind_ptr = []

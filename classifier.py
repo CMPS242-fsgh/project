@@ -6,8 +6,10 @@ class NaiveBayes:
         self._prior = None
         self._mat = None
 
-    def train(self, X, y):
+    def fit(self, X, y):
         y = np.matrix(y)
+        #print type(y)
+        #y = y.T
         p1 = y*X
         p2 = (1-y)*X
         p = np.vstack([
@@ -19,7 +21,7 @@ class NaiveBayes:
         #print self._prior, self._mat
         return p, pri
 
-    def predict_many(self, mat):
+    def predict(self, mat):
         logp = self._mat*mat.T + self._prior
         ans = (np.sign(logp[0] - logp[1]) + 1)/2
         return ans.A1
@@ -47,7 +49,7 @@ class LogisticRegression:
         #z = X * w[:-1] + w[-1]
         return z
 
-    def train(self, X, y):
+    def fit(self, X, y):
         n_features = X.shape[1]
         n_data = X.shape[0]
         #self._w = np.ones(n_features + 1)
@@ -81,8 +83,13 @@ class LogisticRegression:
 
         def _hess(w):
             h = np.empty_like(w)
-            ret[:n_features] = X.T.dot(dX.dot(s[:n_features]))
-            ret[:n_features] += alpha * s[:n_features]
+            z = self._intercept_dot(w, X)
+            z = expit(z)
+            d = z(1-z)
+            R = scipy.sparse.dia_matrix((d, 0),shape=(n_data, n_data))
+
+            h[:n_features] = scipy.dot(X.T, X*R)
+            #ret[:n_features] += alpha * s[:n_features]
 
             # For the fit intercept case.
             if fit_intercept:
@@ -90,7 +97,7 @@ class LogisticRegression:
                 ret[-1] = dd_intercept.dot(s[:n_features])
                 ret[-1] += d.sum() * s[-1]
             return ret
-
+        #hessian_value = numpy.dot(X.T, X * S[:, numpy.newaxis])
 
         #opt = scipy.optimize.minimize(_loss, scipy.ones(n_features + 1), method='Powell', jac=_grad)
         #print opt['x']

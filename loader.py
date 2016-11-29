@@ -4,6 +4,7 @@ import json
 import sqlite3
 import collections
 
+__all__ = ['DataLoader', 'get_target', 'split_training']
 database = 'data/data.db'
 Record = collections.namedtuple('Record', ['business_id', 'reviews', 'categories'])
 
@@ -76,6 +77,63 @@ class DataLoader():
         sql = 'SELECT count(business_id) FROM business WHERE cat LIKE ?'
         n = self._conn.execute(sql, ("%"+cat+"%",)).fetchone()[0]
         return n
+
+def review_from_file(limit = 500):
+    c = 0
+    f = open('data/reviews.csv')
+    for line in f:
+        if c % 1000 ==0:
+            print 'reading reviews', c ,'/', limit
+
+        if c<limit:
+            yield line
+        else:
+            break
+        c += 1
+    f.close()
+
+def cat_from_file(limit = 500):
+    c = 0
+    f = open('data/cat.csv')
+    for line in f:
+        if c<limit:
+            yield line
+        else:
+            break
+        c += 1
+    f.close()
+
+def sp_cat(doc):
+    for word in doc.split(','):
+        word = word.strip()
+        word = word.lower()
+        yield word
+
+def build_cat_dict(limit=100):
+    f = open('data/label_rank.csv')
+    vocab = dict()
+    for line in f.readlines()[:limit]:
+        line = line.strip()
+        line = line.lower()
+        vocab.setdefault(line, len(vocab))
+    return vocab
+
+import feature
+def get_target(limit = 500):
+    vocab = build_cat_dict()
+    v = feature.CountFeature(splitter = sp_cat, voc = vocab)
+    Y = v.transform(cat_from_file(limit))
+    all_cat = list(vocab.items())
+    all_cat.sort(key=lambda x:x[1])
+    return Y.toarray(), map(lambda x:x[0], all_cat)
+
+def split_training(X, y, per):
+    total = X.shape[0]
+    train = int(total * per)
+    #print train, total
+    test = total - train
+    return X[:train], y[:train], X[train:], y[train:]
+
 
 if __name__ == '__main__':
     d = DataLoader()

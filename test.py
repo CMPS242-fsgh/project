@@ -75,7 +75,7 @@ def my_test_naive_bayes(X, y, Xt, yt):
     print "Test naive bayes from my library"
     import classifier
     model = classifier.NaiveBayes()
-    model.train(X, y)
+    model.fit(X, y)
     print 'Model trained on', X.shape[0], 'data'
     s = model.validate(Xt, yt)
     print "score", float(s)/Xt.shape[0], 'on', Xt.shape[0], 'data'
@@ -84,7 +84,7 @@ def my_test_naive_bayes(X, y, Xt, yt):
 def my_test_logistic(X, y, Xt, yt):
     import classifier
     model = classifier.LogisticRegression()
-    model.train(X, y)
+    model.fit(X, y)
     print 'Model trained on', X.shape[0], 'data'
     s = model.validate(Xt, yt)
     pd = model.predict_many(Xt)
@@ -101,7 +101,7 @@ def split_training(X, y, per):
     return X[:train], y[:train], X[train:], y[train:]
 
 #docs, y = data_simple_nlp()
-docs, y = data_yelp(limit = 40000)
+docs, y = data_yelp(limit = 40)
 per = 0.8
 X = my_dict_vectorizer(docs)
 #jprint repr(X.toarray())

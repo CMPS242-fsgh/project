@@ -22,7 +22,6 @@ def data_simple_nlp():
 import time
 
 def timeit(method):
-
     def timed(*args, **kw):
         ts = time.time()
         result = method(*args, **kw)
@@ -148,7 +147,7 @@ def build_dict(limit=100):
 
 #docs, y = data_simple_nlp()
 #docs, y = data_yelp(limit = 600)
-n = 5000
+n = 1000
 per = 0.8
 XX,_ = my_dict_vectorizer(data_review(n))
 import feature
@@ -161,8 +160,60 @@ print XX.shape, Y.shape
 #y = Y[v.vocab['restaurants']]
 print Y.sum(axis=0)
 #print v.vocab
+
+invis_vocab = [0]*len(v.vocab)
+for k,va in v.vocab.items():
+    invis_vocab[va] = k
+
 #exit()
 YY = Y.toarray()
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import LinearSVC
+X, Y, Xt, Yt = split_training(XX, YY, per)
+
+print X.shape
+
+print "---skearn OneVsRest + SVC---"
+model = OneVsRestClassifier(LinearSVC())
+model.fit(X, Y)
+r = model.predict(Xt)
+import compute_Metrics
+
+compute_Metrics.computeMetrics(r, Yt)
+
+from skmultilearn.problem_transform import (BinaryRelevance, LabelPowerset)
+import sklearn.metrics
+
+# assume data is loaded using
+# and is available in X_train/X_test, y_train/y_test
+
+# initialize Binary Relevance multi-label classifier
+# with an SVM classifier
+# SVM in scikit only supports the X matrix in sparse representation
+print X.shape, Y.shape
+classifier = LabelPowerset(classifier = MultinomialNB(), require_dense = [False, True])
+
+# train
+classifier.fit(X, Y)
+
+# predict
+predictions = classifier.predict(Xt)
+predictions = predictions.toarray()
+compute_Metrics.computeMetrics(predictions, Yt)
+
+
+from skmultilearn.adapt import MLkNN
+model = MLkNN()
+model.fit(X, Y)
+pre = model.predict(Xt)
+compute_Metrics.computeMetrics(pre, Yt)
+
+
+
+
+
+
 #y = Y.toarray()[:,v.vocab['restaurants']]
 #jprint repr(X.toarray())
 #X = lib_hash_vectorizer(docs)
@@ -170,21 +221,27 @@ YY = Y.toarray()
 #X, y, Xt, yt = split_training(X, y, per)
 #lib_test_logistic(X, y, Xt, yt)
 
+print '--------'
 from sklearn.naive_bayes import MultinomialNB
 ret = []
-for cat in v.vocab:
-    print "Classify on [{0}]".format(cat)
+for cat in invis_vocab:
+    #print cat
+    #print "Classify on [{0}]".format(cat)
     model = MultinomialNB()
     y = YY[:,v.vocab[cat]]
+    #print y.shape, YY.shape
     X, y, Xt, yt = split_training(XX, y, per)
+    #print y.shape
     model.fit(X, y)
-    print 'Model trained on', X.shape[0], 'data'
+    #print 'Model trained on', X.shape[0], 'data'
     s = model.score(Xt, yt)
-    print ">> score [", s, ']on', Xt.shape[0], 'data'
+    #print ">> score [", s, ']on', Xt.shape[0], 'data'
     pre = model.predict(Xt)
     ret.append(pre)
 
 output = scipy.vstack(ret).T
+
+compute_Metrics.computeMetrics(output, Yt)
 #lib_test_naive_bayes(X, y, Xt, yt)
 #lib_test_logistic(X, y, Xt, yt)
 #my_test_naive_bayes(X, y, Xt, yt)
