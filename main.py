@@ -3,7 +3,7 @@
 import argparse
 import sys
 import time
-
+import warnings
 
 import loader
 from feature import CountFeature
@@ -33,7 +33,6 @@ def load_data(n, n_feature, per, vectorizer):
 def run_OneVsRest(data, ensembler, classifier):
     X, Y, Xt, Yt, cats = data
     model = ensembler(classifier)
-    import warnings
     model.fit(X, Y)
     Yp = model.predict(Xt)
 
@@ -44,6 +43,23 @@ def run_OneVsRest(data, ensembler, classifier):
     print 'the hamming loss:'
     print '>>  ', hl
     print 'DONE..'
+
+@timeit
+def run_LabelPowerset(data, ensembler, classifier):
+    X, Y, Xt, Yt, cats = data
+    model = ensembler(classifier, require_dense=[False, False])
+    model.fit(X, Y)
+    Yp = model.predict(Xt)
+    print Yp.shape, Yt.shape
+    Yp = Yp.toarray()
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        hl = computeMetrics(Yp, Yt, cats)
+
+    print 'the hamming loss:'
+    print '>>  ', hl
+    print 'DONE..'
+
 
 def lib_count_vectorizer(it, stop=True):
     from sklearn.feature_extraction.text import CountVectorizer
@@ -66,6 +82,7 @@ def lib_hash_vectorizer(it, stop=True):
         v = HashingVectorizer(it, stop_words=stop, non_negative=True, norm=None)
         return v.transform(it)
     return f
+
 def my_dict_vectorizer(it, stop=True):
     import feature
     def f(it):
@@ -132,10 +149,17 @@ Available feature vectorizer:
             classifier = NaiveBayes
         elif args.c == 'LIB_NB':
             from sklearn.naive_bayes import MultinomialNB
-            classifier = MultinomialNB()
+            if args.library:
+                classifier = MultinomialNB()
+            else:
+                classifier = MultinomialNB
+
         elif args.c == 'LIB_SVM':
             from sklearn.svm import LinearSVC
-            classifier = LinearSVC()
+            if args.library:
+                classifier = LinearSVC()
+            else:
+                classifier = LinearSVC
 
         if args.f == 'My_dict':
             vectorizer = my_dict_vectorizer(args.stop)
@@ -151,14 +175,48 @@ Available feature vectorizer:
         print 'Running OneVsRest(%s) with %s' %("libray" if args.library else 'ours', args.c)
         run_OneVsRest(data, ensembler, classifier)
 
-    def fetch(self):
-        parser = argparse.ArgumentParser(
-            description='Download objects and refs from another repository')
-        # NOT prefixing the argument with -- means it's not optional
-        parser.add_argument('repository')
-        args = parser.parse_args(sys.argv[2:])
-        print 'Running git fetch, repository=%s' % args.repository
+    def LabelPowerset(self):
+        self.sub_parser.add_argument('--library', action='store_true', default=True)
+        self.sub_parser.add_argument('-c', default='My_NaiveBayes',
+                            choices=['My_NaiveBayes', 'My_Logistic', 'LIB_NB', 'LIB_LR', 'LIB_SVM'],
+                            help='binary classifier')
 
+        args = self.sub_parser.parse_args(sys.argv[2:])
+        print 'Running git fetch, repository=%s' % args
+
+        if args.library:
+            from skmultilearn.problem_transform import (BinaryRelevance, LabelPowerset)
+            ensembler = LabelPowerset
+
+        if args.c == 'My_NaiveBayes':
+            classifier = NaiveBayes
+        elif args.c == 'LIB_NB':
+            from sklearn.naive_bayes import MultinomialNB
+            if args.library:
+                classifier = MultinomialNB()
+            else:
+                classifier = MultinomialNB
+
+        elif args.c == 'LIB_SVM':
+            from sklearn.svm import LinearSVC
+            if args.library:
+                classifier = LinearSVC()
+            else:
+                classifier = LinearSVC
+
+        if args.f == 'My_dict':
+            vectorizer = my_dict_vectorizer(args.stop)
+        elif args.f == 'LIB_count':
+            vectorizer = lib_count_vectorizer(args.stop)
+        elif args.f == 'LIB_hash':
+            vectorizer = lib_hash_vectorizer(args.stop)
+
+        print 'Running OneVsRest, arguments=%s' % args
+        print 'Loading %s data...' %args.N
+        data = load_data(args.N, args.D, args.per, vectorizer)
+        print 'Done loading data, actual feature size:', data[1].shape
+        run_LabelPowerset(data, ensembler, classifier)
+        print "OK"
 
 if __name__ == '__main__':
     Main()
