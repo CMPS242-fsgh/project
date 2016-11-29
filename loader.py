@@ -83,7 +83,7 @@ def review_from_file(limit = 500):
     f = open('data/reviews.csv')
     for line in f:
         if c % 1000 ==0:
-            print 'reading reviews', c ,'/', limit
+            print '    reading reviews', c ,'/', limit
 
         if c<limit:
             yield line
@@ -119,8 +119,8 @@ def build_cat_dict(limit=100):
     return vocab
 
 import feature
-def get_target(limit = 500):
-    vocab = build_cat_dict()
+def get_target(n_feature, limit = 500):
+    vocab = build_cat_dict(n_feature)
     v = feature.CountFeature(splitter = sp_cat, voc = vocab)
     Y = v.transform(cat_from_file(limit))
     all_cat = list(vocab.items())
