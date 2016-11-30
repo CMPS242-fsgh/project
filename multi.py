@@ -11,6 +11,8 @@ class OneVsRest:
         self.n_features = Y.shape[1]
         self.n_samples = Y.shape[0]
         for i in range(self.n_features):
+            if i % 30 == 0:
+                print i, '/', self.n_features, 'fitted'
             model = self.classifier(*self._args, **self._kargs)
             #@print X.shape, Y[:,i].shape
             model.fit(X, Y[:,i])
