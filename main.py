@@ -50,8 +50,12 @@ def run_LabelPowerset(data, ensembler, classifier):
     model = ensembler(classifier, require_dense=[False, False])
     model.fit(X, Y)
     Yp = model.predict(Xt)
+    print '----'
     print Yp.shape, Yt.shape
-    Yp = Yp.toarray()
+    if hasattr(Yp, 'toarray'):
+        Yp = Yp.toarray()
+    print Yt, type(Yt)
+    print Yp, type(Yp)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         hl = computeMetrics(Yp, Yt, cats)
@@ -176,20 +180,24 @@ Available feature vectorizer:
         run_OneVsRest(data, ensembler, classifier)
 
     def LabelPowerset(self):
-        self.sub_parser.add_argument('--library', action='store_true', default=True)
+        self.sub_parser.add_argument('--library', action='store_true', default=False)
         self.sub_parser.add_argument('-c', default='My_NaiveBayes',
                             choices=['My_NaiveBayes', 'My_Logistic', 'LIB_NB', 'LIB_LR', 'LIB_SVM'],
                             help='binary classifier')
 
         args = self.sub_parser.parse_args(sys.argv[2:])
-        print 'Running git fetch, repository=%s' % args
 
         if args.library:
             from skmultilearn.problem_transform import (BinaryRelevance, LabelPowerset)
             ensembler = LabelPowerset
+        else:
+            from multi import LabelPowerSetClassifier
+            ensembler = LabelPowerSetClassifier
 
         if args.c == 'My_NaiveBayes':
-            classifier = NaiveBayes
+            if args.library:
+                print "Not supported"
+                exit()
         elif args.c == 'LIB_NB':
             from sklearn.naive_bayes import MultinomialNB
             if args.library:
@@ -211,12 +219,38 @@ Available feature vectorizer:
         elif args.f == 'LIB_hash':
             vectorizer = lib_hash_vectorizer(args.stop)
 
-        print 'Running OneVsRest, arguments=%s' % args
+        print 'Running Label Powerset, arguments=%s' % args
         print 'Loading %s data...' %args.N
         data = load_data(args.N, args.D, args.per, vectorizer)
         print 'Done loading data, actual feature size:', data[1].shape
         run_LabelPowerset(data, ensembler, classifier)
         print "OK"
+
+    def MLkNN(self):
+        args = self.sub_parser.parse_args(sys.argv[2:])
+        print 'Running ML-kNN, arguments=%s' % args
+        print 'Loading %s data...' %args.N
+
+        if args.f == 'My_dict':
+            vectorizer = my_dict_vectorizer(args.stop)
+        elif args.f == 'LIB_count':
+            vectorizer = lib_count_vectorizer(args.stop)
+        elif args.f == 'LIB_hash':
+            vectorizer = lib_hash_vectorizer(args.stop)
+
+        data = load_data(args.N, args.D, args.per, vectorizer)
+        print 'Done loading data, actual feature size:', data[1].shape
+
+        X, Y, Xt, Yt, cats = data
+        from skmultilearn.adapt import MLkNN
+        model = MLkNN()
+        model.fit(X, Y)
+        pre = model.predict(Xt)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            hl = computeMetrics(pre, Yt)
+        print "Loss >> ", hl
+
 
 if __name__ == '__main__':
     Main()
