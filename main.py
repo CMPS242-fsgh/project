@@ -42,6 +42,9 @@ def run_OneVsRest(data, ensembler, classifier):
 
     print 'the hamming loss:'
     print '>>  ', hl
+    from sklearn.metrics import (hamming_loss, classification_report)
+    print 'hamming loss(library):', hamming_loss(Yt, Yp)
+    print classification_report(Yt, Yp, target_names = cats)
     print 'DONE..'
 
 @timeit
@@ -63,6 +66,9 @@ def run_LabelPowerset(data, ensembler, classifier):
     print 'the hamming loss:'
     print '>>  ', hl
     print 'DONE..'
+    from sklearn.metrics import (hamming_loss, classification_report)
+    print 'hamming loss(library):', hamming_loss(Yt, Yp)
+    print classification_report(Yt, Yp, target_names = cats)
 
 
 def lib_count_vectorizer(it, stop=True):
@@ -198,6 +204,7 @@ Available feature vectorizer:
             if args.library:
                 print "Not supported"
                 exit()
+            classifier = NaiveBayes
         elif args.c == 'LIB_NB':
             from sklearn.naive_bayes import MultinomialNB
             if args.library:
@@ -227,6 +234,8 @@ Available feature vectorizer:
         print "OK"
 
     def MLkNN(self):
+        self.sub_parser.add_argument('--library', action='store_true', default=False)
+
         args = self.sub_parser.parse_args(sys.argv[2:])
         print 'Running ML-kNN, arguments=%s' % args
         print 'Loading %s data...' %args.N
@@ -242,8 +251,13 @@ Available feature vectorizer:
         print 'Done loading data, actual feature size:', data[1].shape
 
         X, Y, Xt, Yt, cats = data
-        from skmultilearn.adapt import MLkNN
-        model = MLkNN()
+        if args.library:
+            from skmultilearn.adapt import MLkNN
+            model = MLkNN()
+        else:
+            from sklearn.neighbors import NearestNeighbors
+            from multi import MLkNN
+            model = MLkNN(NearestNeighbors)
         model.fit(X, Y)
         pre = model.predict(Xt)
         with warnings.catch_warnings():
