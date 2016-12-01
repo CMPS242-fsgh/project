@@ -1,0 +1,37 @@
+
+
+* Haiyu Yang (hyang71)
+
+  1. Implemented the OneVsRest, Label Powerset, MLkNN algorithms.
+
+  2. Wrote the framework of the project (Overall design, commandline)
+
+  3. Wrote the implement description part of the report
+
+  4. Proposed the project topic
+
+* Fa Chang (fachang)
+
+  1. Conducted a literature survey
+
+  2. Evaluated the algorithms. Generated the figures used in the report
+
+  3. Wrote the abstract and problem formation parts of the report.
+
+  4.
+
+* Srikanth Munjuluri (SMUNJULU)
+
+  1. Implemented the metrics model of the project
+
+  2. Evaluated the algorithms.
+
+  3.
+
+* Geetanjali Rakshit (GRAKSHIT)
+
+  1. Prototyped Naive Bayes algorithm and Dictionary vectorizer.
+
+  2. Determined the project problem
+
+  3.
