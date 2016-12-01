@@ -147,6 +147,72 @@ class LabelPowerSetClassifier:
         print '!!!!!'
         return y_decoded
 
+from scipy import sparse
+
+class MLkNN:
+    def __init__(self, model, k=5):
+        self.k = k
+        self.s = 1.0
+        self._cl = model
+        self.knn = None
+
+    def fit(self, X, Y):
+        N = X.shape[0]
+        D = Y.shape[1]
+
+        #print 'size', N, D
+        self.knn = self._cl(self.k).fit(X)
+        neighbors = self.knn.kneighbors(X, self.k, return_distance=False)
+
+        #print 'neighbors', neighbors
+        self.prior = scipy.array((self.s + Y.sum(axis=0))/(self.s * 2 + N))
+
+        c = scipy.zeros((D, self.k + 1), dtype='i8')
+        cn = scipy.zeros((D, self.k + 1), dtype='i8')
+
+        Y = scipy.matrix(Y)
+        for i in range(N):
+            deltas = Y[neighbors[i],:].sum(axis=0)
+            #print 'deltas', deltas
+            for label in range(D):
+                label = int(label)
+                total = int(deltas[0, label])
+                #print label, total,c.shape
+                if Y[i, label] == 1:
+                    c[label, total] += 1
+                else:
+                    cn[label, total] += 1
+
+        c_sum = c.sum(axis=1)
+        cn_sum = cn.sum(axis=1)
+
+        cond_true = scipy.zeros((D, self.k + 1), dtype='float')
+        cond_false = scipy.zeros((D, self.k + 1), dtype='float')
+
+        for label in range(D):
+            for neighbor in range(self.k + 1):
+                cond_true[label,neighbor] = (self.s + c[label, neighbor]) / (self.s * (self.k + 1) + c_sum[label])
+                cond_false[label,neighbor] = (self.s + cn[label, neighbor]) / (self.s * (self.k + 1) + cn_sum[label])
+
+        self.train_labels = Y
+        self.D = D
+        self.cond_true = cond_true
+        self.cond_false = cond_false
+        #print self.prior
+
+    def predict(self, X):
+        result = np.zeros((X.shape[0], self.D), dtype='i8')
+        neighbors = self.knn.kneighbors(X, self.k, return_distance=False)
+        for i in range(X.shape[0]):
+            deltas = self.train_labels[neighbors[i],].sum(axis=0)
+            for label in range(self.D):
+                count = int(deltas[0, label])
+                p_true = self.prior[label] * self.cond_true[label,count]
+                p_false = (1 - self.prior[label]) * self.cond_false[label,count]
+                result[i,label] = int(p_true >= p_false)
+
+        return result
+
 if __name__ == "__main__":
     X = scipy.matrix([
         [1, 1],
