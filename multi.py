@@ -113,7 +113,7 @@ class MLkNN:
         #print self.prior
 
     def predict(self, X):
-        result = np.zeros((X.shape[0], self.D), dtype='i8')
+        result = scipy.zeros((X.shape[0], self.D), dtype='i8')
         neighbors = self.knn.kneighbors(X, self.k, return_distance=False)
         for i in range(X.shape[0]):
             deltas = self.train_labels[neighbors[i],].sum(axis=0)
@@ -126,6 +126,7 @@ class MLkNN:
         return result
 
 if __name__ == "__main__":
+    '''Some basic test for different classifier'''
     X = scipy.matrix([
         [1, 1],
         [1, 2],
@@ -135,14 +136,21 @@ if __name__ == "__main__":
                  [0, 0],
                  [0, 1],
                  [1, 1]])
-
-    from sklearn.naive_bayes import MultinomialNB
-    from sklearn.svm import LinearSVC
-
-    model = LabelPowerset(LinearSVC)
-    model.fit(X, Y)
-
     Xt = scipy.matrix([
         [-1, -1]
     ])
+    from sklearn.svm import LinearSVC
+
+
+    model = OneVsRest(LinearSVC)
+    model.fit(X, Y)
+    print model.predict(Xt)
+
+    model = LabelPowerset(LinearSVC)
+    model.fit(X, Y)
+    print model.predict(Xt)
+
+    from sklearn.neighbors import NearestNeighbors
+    model = MLkNN(NearestNeighbors, k=1)
+    model.fit(X, Y)
     print model.predict(Xt)

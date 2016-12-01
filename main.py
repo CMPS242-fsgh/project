@@ -143,11 +143,13 @@ class Main(object):
         -Nt      [default 10000]  size of testing
         -D       [default 100]   size of labels
 
-4.
-            Available feature vectorizer:
-    My_dictionary
-    LIB_count
-    LIB_hash
+4. Classifier options for OneVsRest:
+        -c My_NaiveBayes
+        -c My_Logistic
+        -c LIB_NB
+        -c LIB_LR
+        -c LIB_SVM
+
 ''')
         parser.add_argument('command', help='method to deal multi label')
         # parse_args defaults to [1:] for args, but you need to
@@ -311,11 +313,18 @@ class Main(object):
             from multi import MLkNN
             model = MLkNN(NearestNeighbors)
         model.fit(X, Y)
-        pre = model.predict(Xt)
+        Yp = model.predict(Xt)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            hl = computeMetrics(pre, Yt)
-        print "Loss >> ", hl
+            hl = computeMetrics(Yp, Yt, cats)
+
+        print 'the hamming loss:'
+        print '>>  ', hl
+        from sklearn.metrics import (hamming_loss, classification_report)
+        print 'hamming loss(library):', hamming_loss(Yt, Yp)
+        print classification_report(Yt, Yp, target_names = cats)
+        print 'DONE..'
+
 
 
 if __name__ == '__main__':
