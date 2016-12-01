@@ -30,8 +30,6 @@ class NaiveBayes:
         predict_y = self.predict_many(mat)
         return (predict_y == real_y).sum()
 
-sigmoid = lambda x: 1.0/(1+scipy.exp(-x))
-
 
 from sklearn.utils.extmath import (safe_sparse_dot, log_logistic)
 from sklearn.utils.fixes import expit
@@ -107,13 +105,16 @@ class LogisticRegression:
         #print X.shape, np.hstack([X, np.ones(n_data)]).shape
         self._w = opt['x']
 
-    def predict(self, x):
+    def predict1(self, x):
         z = self._intercept_dot(self._w, x)
         return expit(z), 1-expit(z)
 
-    def predict_many(self, X):
+    def predict(self, X):
         Z = expit(self._intercept_dot(self._w, X))
-        return Z
+        mask = Z > 0.5
+        r = scipy.zeros(X.shape[0])
+        r[mask] = 1
+        return r
 
     def validate(self, X, y):
         mask = self.predict_many(X) > 0.5

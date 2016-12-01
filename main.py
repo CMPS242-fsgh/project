@@ -7,7 +7,7 @@ import warnings
 
 import loader
 from feature import CountFeature
-from classifier import NaiveBayes
+from classifier import (NaiveBayes, LogisticRegression)
 from multi import OneVsRest
 from compute_Metrics import computeMetrics
 
@@ -163,6 +163,8 @@ Available feature vectorizer:
                 classifier = MultinomialNB()
             else:
                 classifier = MultinomialNB
+        elif args.c == 'My_Logistic':
+            classifier = LogisticRegression
 
         elif args.c == 'LIB_SVM':
             from sklearn.svm import LinearSVC
