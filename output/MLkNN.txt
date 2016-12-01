@@ -1,0 +1,63 @@
+'load_data' 112.37 sec
+Done loading data, actual feature size: (20000L, 50L)
+Hamming Loss :  0.021748
+Hamming Score:  0.544395238095
+the hamming loss:
+>>   0.021748
+hamming loss(library): 0.021748
+C:\Users\Falco\Anaconda2\lib\site-packages\sklearn\metrics\classification.py:1074: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+                           precision    recall  f1-score   support
+
+              restaurants       0.86      0.85      0.85      2668
+                 shopping       0.63      0.60      0.61      1881
+                     food       0.86      0.51      0.64       847
+            beauty & spas       0.90      0.66      0.76       743
+         health & medical       0.70      0.68      0.69       965
+            home services       0.77      0.44      0.56       658
+                nightlife       0.81      0.60      0.69       484
+               automotive       0.83      0.68      0.75       798
+                     bars       0.76      0.58      0.66       422
+           local services       0.77      0.39      0.52       626
+              active life       0.83      0.51      0.63       287
+                  fashion       0.77      0.29      0.43       426
+event planning & services       0.90      0.55      0.69       390
+                fast food       0.59      0.58      0.59       474
+                    pizza       0.90      0.82      0.85       332
+                  mexican       0.97      0.78      0.86       321
+          hotels & travel       0.87      0.70      0.77       345
+               sandwiches       0.67      0.45      0.54       308
+   american (traditional)       0.69      0.40      0.50       406
+     arts & entertainment       0.50      0.51      0.50       205
+              hair salons       0.87      0.68      0.76       245
+             coffee & tea       0.90      0.72      0.80       117
+                  doctors       0.79      0.53      0.63       400
+                  burgers       0.64      0.40      0.49       266
+                  italian       0.80      0.54      0.64       218
+              auto repair       0.73      0.66      0.69       386
+            home & garden       0.66      0.42      0.51       376
+              nail salons       0.94      0.68      0.79       258
+                  chinese       0.90      0.70      0.79       244
+              real estate       0.87      0.49      0.63       251
+           american (new)       0.50      0.16      0.24       137
+                     pets       0.97      0.74      0.84       266
+    fitness & instruction       0.86      0.59      0.70        96
+       breakfast & brunch       0.73      0.57      0.64       164
+                  grocery       0.83      0.40      0.54       240
+                   hotels       0.94      0.78      0.85       236
+                 dentists       0.89      0.62      0.73       251
+         women's clothing       0.68      0.11      0.19       132
+           specialty food       0.58      0.30      0.40       102
+                 bakeries       0.86      0.35      0.50       106
+ice cream & frozen yogurt       0.78      0.54      0.64        94
+       financial services       0.91      0.40      0.56       132
+                    cafes       0.00      0.00      0.00        29
+    professional services       0.54      0.13      0.21       110
+        general dentistry       0.81      0.61      0.70       199
+             pet services       0.61      0.61      0.61       125
+             hair removal       1.00      0.02      0.03        58
+                 japanese       0.78      0.61      0.69        75
+               apartments       0.98      0.58      0.73       183
+                     pubs       0.45      0.10      0.16        50
+
+              avg / total       0.78      0.60      0.67     19132

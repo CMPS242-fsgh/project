@@ -1,0 +1,27 @@
+    reading reviews 85000 / 90100
+'load_data' 295.36 sec
+Done loading data, actual feature size: (85801L, 10L)
+Hamming Loss :  0.033
+Hamming Score:  0.831666666667
+the hamming loss:
+>>   0.033
+DONE..
+hamming loss(library): 0.033
+C:\Users\Falco\Anaconda2\lib\site-packages\sklearn\metrics\classification.py:1074: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+                  precision    recall  f1-score   support
+
+     restaurants       0.91      1.00      0.95        40
+        shopping       0.80      1.00      0.89        20
+            food       1.00      0.50      0.67         8
+   beauty & spas       0.00      0.00      0.00         1
+health & medical       1.00      1.00      1.00         3
+   home services       1.00      0.33      0.50         3
+       nightlife       1.00      0.43      0.60        14
+      automotive       1.00      0.83      0.91         6
+            bars       0.83      0.50      0.62        10
+  local services       0.00      0.00      0.00         2
+
+     avg / total       0.89      0.79      0.80       107
+
+'run_LabelPowerset' 25.00 sec

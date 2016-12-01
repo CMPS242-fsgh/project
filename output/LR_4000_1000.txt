@@ -1,0 +1,67 @@
+'load_data' 10.91 sec
+Done loading data, actual feature size: (4000L, 50L) X shape (4000, 349659)
+Running OneVsRest(libray) with LIB_LR
+Hamming Loss :  0.01638
+Hamming Score:  0.6588
+the hamming loss:
+>>   0.01638
+hamming loss(library): 0.01638
+C:\Users\Falco\Anaconda2\lib\site-packages\sklearn\metrics\classification.py:1074: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+                           precision    recall  f1-score   support
+
+              restaurants       0.95      0.92      0.93       357
+                 shopping       0.88      0.82      0.85       171
+                     food       0.85      0.76      0.80       113
+            beauty & spas       1.00      0.83      0.91        54
+         health & medical       0.97      0.90      0.94        42
+            home services       0.88      0.56      0.69        39
+                nightlife       0.71      0.65      0.68        75
+               automotive       0.96      0.88      0.92        58
+                     bars       0.67      0.57      0.61        67
+           local services       0.88      0.60      0.72        48
+              active life       0.86      0.44      0.59        27
+                  fashion       0.82      0.63      0.71        43
+event planning & services       0.94      0.61      0.74        49
+                fast food       0.92      0.51      0.66        43
+                    pizza       0.96      0.83      0.89        66
+                  mexican       1.00      0.89      0.94         9
+          hotels & travel       1.00      0.72      0.84        40
+               sandwiches       0.48      0.55      0.52        29
+   american (traditional)       0.58      0.37      0.45        60
+     arts & entertainment       1.00      0.47      0.64        34
+              hair salons       0.88      0.78      0.82        27
+             coffee & tea       0.90      0.83      0.86        23
+                  doctors       0.60      0.43      0.50         7
+                  burgers       0.76      0.46      0.57        35
+                  italian       0.65      0.54      0.59        41
+              auto repair       0.82      0.68      0.74        34
+            home & garden       0.94      0.52      0.67        33
+              nail salons       0.92      0.75      0.83        16
+                  chinese       0.92      0.70      0.79        33
+              real estate       1.00      0.62      0.76        13
+           american (new)       0.44      0.30      0.36        27
+                     pets       0.88      0.75      0.81        20
+    fitness & instruction       0.80      0.67      0.73         6
+       breakfast & brunch       0.42      0.31      0.36        16
+                  grocery       0.85      0.53      0.65        32
+                   hotels       1.00      0.89      0.94        28
+                 dentists       1.00      0.76      0.87        17
+         women's clothing       0.33      0.08      0.13        12
+           specialty food       0.71      0.42      0.53        12
+                 bakeries       0.93      0.59      0.72        22
+ice cream & frozen yogurt       1.00      0.55      0.71        11
+       financial services       1.00      0.40      0.57         5
+                    cafes       0.00      0.00      0.00         7
+    professional services       0.00      0.00      0.00         4
+        general dentistry       1.00      0.60      0.75        15
+             pet services       0.80      0.50      0.62         8
+             hair removal       0.00      0.00      0.00         6
+                 japanese       0.67      0.50      0.57         8
+               apartments       0.67      0.67      0.67         6
+                     pubs       0.33      0.07      0.11        15
+
+              avg / total       0.85      0.69      0.76      1963
+
+DONE..
+'run_OneVsRest' 284.62 sec
