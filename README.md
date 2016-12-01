@@ -44,7 +44,7 @@ CMPS242 Project
         -c LIB_SVM
 
 
-#Archievements:
+# Archievements:
 
 1. Code from scratch(Depend on scipy only):
 
@@ -61,3 +61,7 @@ CMPS242 Project
 2. Better performance than Naive Bayes implementation in sklearn
 
 3. Aglorithm works entire yelp data (4 GiB)
+
+# Test cases
+
+Almost all model can be run as script. That will test the model with a simple case.
