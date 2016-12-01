@@ -147,12 +147,12 @@ def build_dict(limit=100):
 
 #docs, y = data_simple_nlp()
 #docs, y = data_yelp(limit = 600)
-n = 1000
+n = 6000
 per = 0.8
 XX,_ = my_dict_vectorizer(data_review(n))
 import feature
 
-vocab = build_dict()
+vocab = build_dict(500)
 v = feature.CountFeature(splitter = sp, voc = vocab)
 Y = v.transform(data_cat(n))
 print XX.shape, Y.shape
@@ -174,13 +174,13 @@ X, Y, Xt, Yt = split_training(XX, YY, per)
 
 print X.shape
 
-print "---skearn OneVsRest + SVC---"
-model = OneVsRestClassifier(LinearSVC())
-model.fit(X, Y)
-r = model.predict(Xt)
-import compute_Metrics
+#print "---skearn OneVsRest + SVC---"
+#model = OneVsRestClassifier(LinearSVC())
+#model.fit(X, Y)
+#r = model.predict(Xt)
+#import compute_Metrics
 
-compute_Metrics.computeMetrics(r, Yt)
+#compute_Metrics.computeMetrics(r, Yt)
 
 from skmultilearn.problem_transform import (BinaryRelevance, LabelPowerset)
 import sklearn.metrics
@@ -192,7 +192,7 @@ import sklearn.metrics
 # with an SVM classifier
 # SVM in scikit only supports the X matrix in sparse representation
 print X.shape, Y.shape
-classifier = LabelPowerset(classifier = MultinomialNB(), require_dense = [False, True])
+classifier = LabelPowerset(classifier = LinearSVC(), require_dense = [False, True])
 
 # train
 classifier.fit(X, Y)
