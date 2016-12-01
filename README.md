@@ -2,6 +2,17 @@ CMPS242 Project
 
 #Usage:
 
+* place yelp dataset(*.json) in data folder
+* preprocess:
+
+        python preprocess.py
+        python txt.py
+
+* run:
+
+        python main.py OneVsRest
+
+#Options:
 1. Choose one of methods:
 
         OneVsRest                 Adapt problem into binary classificaiton
