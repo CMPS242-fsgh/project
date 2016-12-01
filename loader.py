@@ -127,12 +127,9 @@ def get_target(n_feature, limit = 500):
     all_cat.sort(key=lambda x:x[1])
     return Y.toarray(), map(lambda x:x[0], all_cat)
 
-def split_training(X, y, per):
+def split_training(X, y, n_test):
     total = X.shape[0]
-    train = int(total * per)
-    #print train, total
-    test = total - train
-    return X[:train], y[:train], X[train:], y[train:]
+    return X[n_test:], y[n_test:], X[:n_test], y[:n_test]
 
 
 if __name__ == '__main__':

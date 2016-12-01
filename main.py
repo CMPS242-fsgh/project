@@ -23,10 +23,12 @@ def timeit(method):
     return timed
 
 @timeit
-def load_data(n, n_feature, per, vectorizer):
-    YY, categories = loader.get_target(n_feature, n)
-    XX = vectorizer(loader.review_from_file(n))
-    X, Y, Xt, Yt = loader.split_training(XX, YY, per)
+def load_data(n, n_feature, n_test, vectorizer):
+    N = n_test + n
+    YY, categories = loader.get_target(n_feature, N)
+    XX = vectorizer(loader.review_from_file(N))
+
+    X, Y, Xt, Yt = loader.split_training(XX, YY, n_test)
     return X, Y, Xt, Yt, categories
 
 @timeit
@@ -53,8 +55,8 @@ def run_LabelPowerset(data, ensembler, classifier):
     model = ensembler(classifier, require_dense=[False, False])
     model.fit(X, Y)
     Yp = model.predict(Xt)
-    print '----'
-    print Yp.shape, Yt.shape
+    #print '----'
+    #print Yp.shape, Yt.shape
     if hasattr(Yp, 'toarray'):
         Yp = Yp.toarray()
     #print Yt, type(Yt)
@@ -71,34 +73,50 @@ def run_LabelPowerset(data, ensembler, classifier):
     print classification_report(Yt, Yp, target_names = cats)
 
 
-def lib_count_vectorizer(it, stop=True):
+def lib_count_vectorizer(stop=True, bigram=False):
     from sklearn.feature_extraction.text import CountVectorizer
+    ngram = (1,2) if bigram else (1,1)
+    stopf = stop
     def f(it):
-        if stop:
+        if stopf:
             stop = 'english'
         else:
             stop = None
-        v = CountVectorizer(it, stop_words=stop)
+        v = CountVectorizer(it, stop_words=stop, ngram_range=ngram)
+        print stop
         return v.fit_transform(it)
     return f
 
-def lib_hash_vectorizer(it, stop=True):
+def lib_hash_vectorizer(stop=True, bigram=False):
     from sklearn.feature_extraction.text import HashingVectorizer
+    ngram = (1,2) if bigram else (1,1)
+    stopf = stop
     def f(it):
-        if stop:
+        if stopf:
             stop = 'english'
         else:
             stop = None
-        v = HashingVectorizer(it, stop_words=stop, non_negative=True, norm=None)
+        v = HashingVectorizer(it, stop_words=stop, non_negative=True, norm=None, ngram_range=ngram)
         return v.transform(it)
     return f
 
-def my_dict_vectorizer(it, stop=True):
-    import feature
+def lib_tfidf_vectorizer(stop=True, bigram=None):
+    from sklearn.feature_extraction.text import TfidfVectorizer
     def f(it):
-        v = feature.CountFeature(limit = -1, use_stopwords=stop)
+        v = TfidfVectorizer()
+        return v.fit_transform(it)
+    return f
+
+
+def my_dict_vectorizer(stop=True, bigram=False):
+    import feature
+    stopf = stop
+    def f(it):
+        v = feature.CountFeature(limit = -1, use_stopwords=stopf, bigram=bigram)
+        print stopf
         return v.transform(it)
     return f
+
 
 class Main(object):
     def __init__(self):
@@ -106,12 +124,27 @@ class Main(object):
             description='CMPS242 project',
             usage='''main.py <method> [<options>] [--featue <vectorizer>]
 
-The available methods::
-            OneVsRest       [scratch]   Adapt problem into binary classificaiton
-            LabelPowerset   [library]   Adapt multi-label into multi-class
-            MLkNN           [library]   Multi label kNN
+1. Choose one of methods::
+        OneVsRest                 Adapt problem into binary classificaiton
+        LabelPowerset             Adapt multi-label into multi-class
+        MLkNN                     Multi label kNN
+        --library     [optional]  Use library implementation instead of ours
 
-Available feature vectorizer:
+2. Choose one of feature vecterizer (ues -f)
+        -f My_dict                Our implementation of dictionary vectorizer
+        -f LIB_count              Counting vectorizer from sklearn
+        -f LIB_hash               Hashing vectorizer from sklearn
+        -f LIB_tfidf              Tf-idf
+        --nostop                  Do not use stopwords
+        --bigram                  Use bigram instead of unigram
+
+3. Control the data size
+        -N       [default 50000]  size of training
+        -Nt      [default 10000]  size of testing
+        -D       [default 100]   size of labels
+
+4.
+            Available feature vectorizer:
     My_dictionary
     LIB_count
     LIB_hash
@@ -129,11 +162,12 @@ Available feature vectorizer:
         self.sub_parser = argparse.ArgumentParser()
         # prefixing the argument with -- means it's optional
         self.sub_parser.add_argument('-f', default='My_dict',
-                            choices=['My_dict', 'LIB_count', 'LIB_hash'])
-        self.sub_parser.add_argument('-N', default=5000, type=int, help='Number of samples (train + test)')
+                            choices=['My_dict', 'LIB_count', 'LIB_hash', 'LIB_tfidf'])
+        self.sub_parser.add_argument('-N', default=5000, type=int, help='Number of train samples')
         self.sub_parser.add_argument('-D', default=500, type=int, help='Number of labels ')
-        self.sub_parser.add_argument('--stop', default=True, action='store_true', help='Use stop-words')
-        self.sub_parser.add_argument('--per', default=0.8, type=float, help='percentage of train data')
+        self.sub_parser.add_argument('--nostop', default=False, action='store_true', help='Do not use stop-words')
+        self.sub_parser.add_argument('-Nt', default=10000, type=int, help='Number of Test data')
+        self.sub_parser.add_argument('--bigram', default=False, action='store_true', help='Use bigram')
 
         getattr(self, args.command)()
 
@@ -180,16 +214,18 @@ Available feature vectorizer:
                 classifier = LinearSVC
 
         if args.f == 'My_dict':
-            vectorizer = my_dict_vectorizer(args.stop)
+            vectorizer = my_dict_vectorizer(stop=not args.nostop, bigram=args.bigram)
         elif args.f == 'LIB_count':
-            vectorizer = lib_count_vectorizer(args.stop)
+            vectorizer = lib_count_vectorizer(stop=not args.nostop, bigram=args.bigram)
         elif args.f == 'LIB_hash':
-            vectorizer = lib_hash_vectorizer(args.stop)
+            vectorizer = lib_hash_vectorizer(stop=not args.nostop, bigram=args.bigram)
+        elif args.f == 'LIB_tfidf':
+            vectorizer = lib_tfidf_vectorizer(stop=not args.nostop, bigram=args.bigram)
 
         print 'Running OneVsRest, arguments=%s' % args
         print 'Loading %s data...' %args.N
-        data = load_data(args.N, args.D, args.per, vectorizer)
-        print 'Done loading data, actual feature size:', data[1].shape
+        data = load_data(args.N, args.D, args.Nt, vectorizer)
+        print 'Done loading data, actual feature size:', data[1].shape, 'X shape', data[0].shape
         print 'Running OneVsRest(%s) with %s' %("libray" if args.library else 'ours', args.c)
         run_OneVsRest(data, ensembler, classifier)
 
@@ -212,10 +248,9 @@ Available feature vectorizer:
 
 
         if args.c == 'My_NaiveBayes':
-            if args.library:
-                print "Not supported"
-                exit()
-            classifier = NaiveBayes
+            print "Not supported"
+            exit()
+
         elif args.c == 'LIB_NB':
             from sklearn.naive_bayes import MultinomialNB
             if args.library:
@@ -229,17 +264,19 @@ Available feature vectorizer:
                 classifier = LinearSVC()
             else:
                 classifier = LinearSVC
-
         if args.f == 'My_dict':
-            vectorizer = my_dict_vectorizer(args.stop)
+            vectorizer = my_dict_vectorizer(stop=not args.nostop, bigram=args.bigram)
         elif args.f == 'LIB_count':
-            vectorizer = lib_count_vectorizer(args.stop)
+            vectorizer = lib_count_vectorizer(stop=not args.nostop, bigram=args.bigram)
         elif args.f == 'LIB_hash':
-            vectorizer = lib_hash_vectorizer(args.stop)
+            vectorizer = lib_hash_vectorizer(stop=not args.nostop, bigram=args.bigram)
+        elif args.f == 'LIB_tfidf':
+            vectorizer = lib_tfidf_vectorizer(stop=not args.nostop, bigram=args.bigram)
+
 
         print 'Running Label Powerset, arguments=%s' % args
         print 'Loading %s data...' %args.N
-        data = load_data(args.N, args.D, args.per, vectorizer)
+        data = load_data(args.N, args.D, args.Nt, vectorizer)
         print 'Done loading data, actual feature size:', data[1].shape
         run_LabelPowerset(data, ensembler, classifier)
         print "OK"
@@ -252,13 +289,17 @@ Available feature vectorizer:
         print 'Loading %s data...' %args.N
 
         if args.f == 'My_dict':
-            vectorizer = my_dict_vectorizer(args.stop)
+            vectorizer = my_dict_vectorizer(stop=not args.nostop, bigram=args.bigram)
         elif args.f == 'LIB_count':
-            vectorizer = lib_count_vectorizer(args.stop)
+            vectorizer = lib_count_vectorizer(stop=not args.nostop, bigram=args.bigram)
         elif args.f == 'LIB_hash':
-            vectorizer = lib_hash_vectorizer(args.stop)
+            vectorizer = lib_hash_vectorizer(stop=not args.nostop, bigram=args.bigram)
+        elif args.f == 'LIB_tfidf':
+            vectorizer = lib_tfidf_vectorizer(stop=not args.nostop, bigram=args.bigram)
 
-        data = load_data(args.N, args.D, args.per, vectorizer)
+
+
+        data = load_data(args.N, args.D, args.Nt, vectorizer)
         print 'Done loading data, actual feature size:', data[1].shape
 
         X, Y, Xt, Yt, cats = data

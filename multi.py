@@ -56,6 +56,8 @@ class LabelPowerset:
     def decode(self, Y):
         r = []
         for en in Y:
+            #print en
+            en = 0 if str(en)=='nan' else en
             r.append(map(lambda x: 1 if int(en) & x else 0, [1<<i for i in range(0, self._n, 1)]))
         return r
 

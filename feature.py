@@ -4,10 +4,11 @@ import numpy as np
 from stopwords import stopwords
 
 class CountFeature:
-    def __init__(self, voc = None, use_stopwords = True, limit = 0, splitter = None):
+    def __init__(self, voc = None, use_stopwords = True, limit = 0, splitter = None, bigram=False):
         if limit > 0:
             raise "Not Implemented"
 
+        self.bigram = bigram
         self._limit = limit
         self.use_stopwords = use_stopwords
         if splitter:
@@ -22,12 +23,16 @@ class CountFeature:
             self.vocab = voc
 
     def _splitter(self, doc):
+        last_word = ''
         for word in doc.split():
             #print word, word in stopwords
             word = word.lower()
             if self.use_stopwords:
                 if word not in stopwords:
                     yield word
+                    if self.bigram and last_word:
+                        yield last_word+' '+word
+                    last_word = word
             else:
                 yield word
 
@@ -79,7 +84,7 @@ class CountFeature:
 
 
 if __name__=='__main__':
-    f = CountFeature(use_stopwords=True)
+    f = CountFeature(use_stopwords=True, bigram=True)
     dataset = [
         "Hello World Hello a",
         "Good Luck",

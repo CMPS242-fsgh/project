@@ -1,0 +1,140 @@
+Running OneVsRest, arguments=Namespace(D=50, N=60000, Nt=10000, bigram=False, c='My_NaiveBayes', f='My_dict', library=False, stop=True)
+Loading 60000 data...
+    reading reviews 0 / 70000
+    reading reviews 1000 / 70000
+    reading reviews 2000 / 70000
+    reading reviews 3000 / 70000
+    reading reviews 4000 / 70000
+    reading reviews 5000 / 70000
+    reading reviews 6000 / 70000
+    reading reviews 7000 / 70000
+    reading reviews 8000 / 70000
+    reading reviews 9000 / 70000
+    reading reviews 10000 / 70000
+    reading reviews 11000 / 70000
+    reading reviews 12000 / 70000
+    reading reviews 13000 / 70000
+    reading reviews 14000 / 70000
+    reading reviews 15000 / 70000
+    reading reviews 16000 / 70000
+    reading reviews 17000 / 70000
+    reading reviews 18000 / 70000
+    reading reviews 19000 / 70000
+    reading reviews 20000 / 70000
+    reading reviews 21000 / 70000
+    reading reviews 22000 / 70000
+    reading reviews 23000 / 70000
+    reading reviews 24000 / 70000
+    reading reviews 25000 / 70000
+    reading reviews 26000 / 70000
+    reading reviews 27000 / 70000
+    reading reviews 28000 / 70000
+    reading reviews 29000 / 70000
+    reading reviews 30000 / 70000
+    reading reviews 31000 / 70000
+    reading reviews 32000 / 70000
+    reading reviews 33000 / 70000
+    reading reviews 34000 / 70000
+    reading reviews 35000 / 70000
+    reading reviews 36000 / 70000
+    reading reviews 37000 / 70000
+    reading reviews 38000 / 70000
+    reading reviews 39000 / 70000
+    reading reviews 40000 / 70000
+    reading reviews 41000 / 70000
+    reading reviews 42000 / 70000
+    reading reviews 43000 / 70000
+    reading reviews 44000 / 70000
+    reading reviews 45000 / 70000
+    reading reviews 46000 / 70000
+    reading reviews 47000 / 70000
+    reading reviews 48000 / 70000
+    reading reviews 49000 / 70000
+    reading reviews 50000 / 70000
+    reading reviews 51000 / 70000
+    reading reviews 52000 / 70000
+    reading reviews 53000 / 70000
+    reading reviews 54000 / 70000
+    reading reviews 55000 / 70000
+    reading reviews 56000 / 70000
+    reading reviews 57000 / 70000
+    reading reviews 58000 / 70000
+    reading reviews 59000 / 70000
+    reading reviews 60000 / 70000
+    reading reviews 61000 / 70000
+    reading reviews 62000 / 70000
+    reading reviews 63000 / 70000
+    reading reviews 64000 / 70000
+    reading reviews 65000 / 70000
+    reading reviews 66000 / 70000
+    reading reviews 67000 / 70000
+    reading reviews 68000 / 70000
+    reading reviews 69000 / 70000
+    reading reviews 70000 / 70000
+'load_data' 170.09 sec
+Done loading data, actual feature size: (60000, 50)
+Running OneVsRest(ours) with My_NaiveBayes
+0 / 50 fitted
+30 / 50 fitted
+Hamming Loss :  0.022816
+Hamming Score:  0.535050634921
+the hamming loss:
+>>   0.022816
+hamming loss(library): 0.022816
+                           precision    recall  f1-score   support
+
+              restaurants       0.91      0.95      0.93      2668
+                 shopping       0.75      0.90      0.82      1881
+                     food       0.88      0.71      0.79       847
+            beauty & spas       0.76      0.89      0.82       743
+         health & medical       0.93      0.92      0.93       965
+            home services       0.73      0.61      0.66       658
+                nightlife       0.77      0.73      0.75       484
+               automotive       0.85      0.84      0.85       798
+                     bars       0.71      0.71      0.71       422
+           local services       0.84      0.03      0.06       626
+              active life       0.78      0.55      0.64       287
+                  fashion       0.86      0.10      0.18       426
+event planning & services       0.64      0.64      0.64       390
+                fast food       0.00      0.00      0.00       474
+                    pizza       0.94      0.72      0.82       332
+                  mexican       0.92      0.82      0.87       321
+          hotels & travel       0.56      0.92      0.70       345
+               sandwiches       0.82      0.09      0.16       308
+   american (traditional)       0.43      0.08      0.13       406
+     arts & entertainment       0.26      0.67      0.37       205
+              hair salons       0.94      0.33      0.48       245
+             coffee & tea       0.95      0.17      0.29       117
+                  doctors       0.91      0.05      0.10       400
+                  burgers       0.79      0.07      0.13       266
+                  italian       0.64      0.28      0.39       218
+              auto repair       0.86      0.29      0.43       386
+            home & garden       0.00      0.00      0.00       376
+              nail salons       0.99      0.48      0.65       258
+                  chinese       0.94      0.19      0.31       244
+              real estate       0.00      0.00      0.00       251
+           american (new)       0.38      0.09      0.15       137
+                     pets       0.99      0.30      0.46       266
+    fitness & instruction       0.92      0.11      0.20        96
+       breakfast & brunch       0.70      0.33      0.45       164
+                  grocery       0.00      0.00      0.00       240
+                   hotels       0.77      0.96      0.85       236
+                 dentists       1.00      0.04      0.08       251
+         women's clothing       0.00      0.00      0.00       132
+           specialty food       0.00      0.00      0.00       102
+                 bakeries       1.00      0.01      0.02       106
+ice cream & frozen yogurt       1.00      0.01      0.02        94
+       financial services       0.00      0.00      0.00       132
+                    cafes       0.00      0.00      0.00        29
+    professional services       0.00      0.00      0.00       110
+        general dentistry       0.00      0.00      0.00       199
+             pet services       0.00      0.00      0.00       125
+             hair removal       0.00      0.00      0.00        58
+                 japanese       0.71      0.23      0.34        75
+               apartments       0.00      0.00      0.00       183
+                     pubs       0.00      0.00      0.00        50
+
+              avg / total       0.71      0.55      0.56     19132
+
+DONE..
+'run_OneVsRest' 24.18 sec
