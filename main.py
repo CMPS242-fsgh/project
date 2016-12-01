@@ -23,10 +23,12 @@ def timeit(method):
     return timed
 
 @timeit
-def load_data(n, n_feature, per, vectorizer):
-    YY, categories = loader.get_target(n_feature, n)
-    XX = vectorizer(loader.review_from_file(n))
-    X, Y, Xt, Yt = loader.split_training(XX, YY, per)
+def load_data(n, n_feature, n_test, vectorizer):
+    N = n_test + n
+    YY, categories = loader.get_target(n_feature, N)
+    XX = vectorizer(loader.review_from_file(N))
+
+    X, Y, Xt, Yt = loader.split_training(XX, YY, n_test)
     return X, Y, Xt, Yt, categories
 
 @timeit
@@ -53,8 +55,8 @@ def run_LabelPowerset(data, ensembler, classifier):
     model = ensembler(classifier, require_dense=[False, False])
     model.fit(X, Y)
     Yp = model.predict(Xt)
-    print '----'
-    print Yp.shape, Yt.shape
+    #print '----'
+    #print Yp.shape, Yt.shape
     if hasattr(Yp, 'toarray'):
         Yp = Yp.toarray()
     #print Yt, type(Yt)
@@ -93,12 +95,21 @@ def lib_hash_vectorizer(it, stop=True):
         return v.transform(it)
     return f
 
+def lib_tfidf_vectorizer(it, stop=True):
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    def f(it):
+        v = TfidfVectorizer()
+        return v.fit_transform(it)
+    return f
+
+
 def my_dict_vectorizer(it, stop=True):
     import feature
     def f(it):
         v = feature.CountFeature(limit = -1, use_stopwords=stop)
         return v.transform(it)
     return f
+
 
 class Main(object):
     def __init__(self):
@@ -129,11 +140,11 @@ Available feature vectorizer:
         self.sub_parser = argparse.ArgumentParser()
         # prefixing the argument with -- means it's optional
         self.sub_parser.add_argument('-f', default='My_dict',
-                            choices=['My_dict', 'LIB_count', 'LIB_hash'])
-        self.sub_parser.add_argument('-N', default=5000, type=int, help='Number of samples (train + test)')
+                            choices=['My_dict', 'LIB_count', 'LIB_hash', 'LIB_tfidf'])
+        self.sub_parser.add_argument('-N', default=5000, type=int, help='Number of train samples')
         self.sub_parser.add_argument('-D', default=500, type=int, help='Number of labels ')
         self.sub_parser.add_argument('--stop', default=True, action='store_true', help='Use stop-words')
-        self.sub_parser.add_argument('--per', default=0.8, type=float, help='percentage of train data')
+        self.sub_parser.add_argument('-Nt', default=10000, type=int, help='Number of Test data')
 
         getattr(self, args.command)()
 
@@ -185,10 +196,12 @@ Available feature vectorizer:
             vectorizer = lib_count_vectorizer(args.stop)
         elif args.f == 'LIB_hash':
             vectorizer = lib_hash_vectorizer(args.stop)
+        elif args.f == 'LIB_tfidf':
+            vectorizer = lib_tfidf_vectorizer(args.stop)
 
         print 'Running OneVsRest, arguments=%s' % args
         print 'Loading %s data...' %args.N
-        data = load_data(args.N, args.D, args.per, vectorizer)
+        data = load_data(args.N, args.D, args.Nt, vectorizer)
         print 'Done loading data, actual feature size:', data[1].shape
         print 'Running OneVsRest(%s) with %s' %("libray" if args.library else 'ours', args.c)
         run_OneVsRest(data, ensembler, classifier)
@@ -212,10 +225,9 @@ Available feature vectorizer:
 
 
         if args.c == 'My_NaiveBayes':
-            if args.library:
-                print "Not supported"
-                exit()
-            classifier = NaiveBayes
+            print "Not supported"
+            exit()
+
         elif args.c == 'LIB_NB':
             from sklearn.naive_bayes import MultinomialNB
             if args.library:
@@ -239,7 +251,7 @@ Available feature vectorizer:
 
         print 'Running Label Powerset, arguments=%s' % args
         print 'Loading %s data...' %args.N
-        data = load_data(args.N, args.D, args.per, vectorizer)
+        data = load_data(args.N, args.D, args.Nt, vectorizer)
         print 'Done loading data, actual feature size:', data[1].shape
         run_LabelPowerset(data, ensembler, classifier)
         print "OK"
@@ -258,7 +270,7 @@ Available feature vectorizer:
         elif args.f == 'LIB_hash':
             vectorizer = lib_hash_vectorizer(args.stop)
 
-        data = load_data(args.N, args.D, args.per, vectorizer)
+        data = load_data(args.N, args.D, args.Nt, vectorizer)
         print 'Done loading data, actual feature size:', data[1].shape
 
         X, Y, Xt, Yt, cats = data
