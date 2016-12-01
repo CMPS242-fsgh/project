@@ -1,5 +1,7 @@
 import numpy as np
 import scipy
+import scipy.optimize
+from scipy.special import expit
 
 class NaiveBayes:
     def __init__(self):
@@ -30,18 +32,16 @@ class NaiveBayes:
         predict_y = self.predict_many(mat)
         return (predict_y == real_y).sum()
 
-
-from sklearn.utils.extmath import (safe_sparse_dot, log_logistic)
-from sklearn.utils.fixes import expit
-from sklearn.utils.optimize import newton_cg
-
 class LogisticRegression:
     def __init__(self, lbd = 1.):
         self._w = None
         self._lbd = lbd
 
     def _intercept_dot(self, w, X):
-        z = safe_sparse_dot(X, w[:-1])
+        #z = scipy.dot(X, w[:-1])
+        #print X.shape, w[:-1].shape
+        z = X*w[:-1]
+        #z = safe_sparse_dot(X, w[:-1])
         #print X*w[:-1]
         z = z + w[-1]
         #z = X * w[:-1] + w[-1]

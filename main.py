@@ -57,8 +57,8 @@ def run_LabelPowerset(data, ensembler, classifier):
     print Yp.shape, Yt.shape
     if hasattr(Yp, 'toarray'):
         Yp = Yp.toarray()
-    print Yt, type(Yt)
-    print Yp, type(Yp)
+    #print Yt, type(Yt)
+    #print Yp, type(Yp)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         hl = computeMetrics(Yp, Yt, cats)
@@ -165,6 +165,12 @@ Available feature vectorizer:
                 classifier = MultinomialNB
         elif args.c == 'My_Logistic':
             classifier = LogisticRegression
+        elif args.c == 'LIB_LR':
+            from sklearn.linear_model import LogisticRegression as LR
+            if args.library:
+                classifier = LR()
+            else:
+                classifier = LR
 
         elif args.c == 'LIB_SVM':
             from sklearn.svm import LinearSVC
@@ -199,8 +205,11 @@ Available feature vectorizer:
             from skmultilearn.problem_transform import (BinaryRelevance, LabelPowerset)
             ensembler = LabelPowerset
         else:
-            from multi import LabelPowerSetClassifier
-            ensembler = LabelPowerSetClassifier
+            from multi import LabelPowerset
+            #from multi import LabelPowerSetClassifier
+            ensembler = LabelPowerset
+            #ensembler = LabelPowerSetClassifier
+
 
         if args.c == 'My_NaiveBayes':
             if args.library:
