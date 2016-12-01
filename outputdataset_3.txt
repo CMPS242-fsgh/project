@@ -1,0 +1,130 @@
+Running OneVsRest, arguments=Namespace(D=50, N=50000, Nt=10000, bigram=False, c='My_NaiveBayes', f='My_dict', library=False, stop=True)
+Loading 50000 data...
+    reading reviews 0 / 60000
+    reading reviews 1000 / 60000
+    reading reviews 2000 / 60000
+    reading reviews 3000 / 60000
+    reading reviews 4000 / 60000
+    reading reviews 5000 / 60000
+    reading reviews 6000 / 60000
+    reading reviews 7000 / 60000
+    reading reviews 8000 / 60000
+    reading reviews 9000 / 60000
+    reading reviews 10000 / 60000
+    reading reviews 11000 / 60000
+    reading reviews 12000 / 60000
+    reading reviews 13000 / 60000
+    reading reviews 14000 / 60000
+    reading reviews 15000 / 60000
+    reading reviews 16000 / 60000
+    reading reviews 17000 / 60000
+    reading reviews 18000 / 60000
+    reading reviews 19000 / 60000
+    reading reviews 20000 / 60000
+    reading reviews 21000 / 60000
+    reading reviews 22000 / 60000
+    reading reviews 23000 / 60000
+    reading reviews 24000 / 60000
+    reading reviews 25000 / 60000
+    reading reviews 26000 / 60000
+    reading reviews 27000 / 60000
+    reading reviews 28000 / 60000
+    reading reviews 29000 / 60000
+    reading reviews 30000 / 60000
+    reading reviews 31000 / 60000
+    reading reviews 32000 / 60000
+    reading reviews 33000 / 60000
+    reading reviews 34000 / 60000
+    reading reviews 35000 / 60000
+    reading reviews 36000 / 60000
+    reading reviews 37000 / 60000
+    reading reviews 38000 / 60000
+    reading reviews 39000 / 60000
+    reading reviews 40000 / 60000
+    reading reviews 41000 / 60000
+    reading reviews 42000 / 60000
+    reading reviews 43000 / 60000
+    reading reviews 44000 / 60000
+    reading reviews 45000 / 60000
+    reading reviews 46000 / 60000
+    reading reviews 47000 / 60000
+    reading reviews 48000 / 60000
+    reading reviews 49000 / 60000
+    reading reviews 50000 / 60000
+    reading reviews 51000 / 60000
+    reading reviews 52000 / 60000
+    reading reviews 53000 / 60000
+    reading reviews 54000 / 60000
+    reading reviews 55000 / 60000
+    reading reviews 56000 / 60000
+    reading reviews 57000 / 60000
+    reading reviews 58000 / 60000
+    reading reviews 59000 / 60000
+    reading reviews 60000 / 60000
+'load_data' 158.08 sec
+Done loading data, actual feature size: (50000, 50)
+Running OneVsRest(ours) with My_NaiveBayes
+0 / 50 fitted
+30 / 50 fitted
+Hamming Loss :  0.02314
+Hamming Score:  0.522825515873
+the hamming loss:
+>>   0.02314
+hamming loss(library): 0.02314
+                           precision    recall  f1-score   support
+
+              restaurants       0.91      0.95      0.93      2668
+                 shopping       0.76      0.89      0.82      1881
+                     food       0.88      0.70      0.78       847
+            beauty & spas       0.79      0.88      0.83       743
+         health & medical       0.95      0.90      0.92       965
+            home services       0.76      0.49      0.60       658
+                nightlife       0.79      0.72      0.75       484
+               automotive       0.87      0.84      0.85       798
+                     bars       0.72      0.70      0.71       422
+           local services       0.90      0.03      0.06       626
+              active life       0.81      0.50      0.62       287
+                  fashion       0.86      0.10      0.18       426
+event planning & services       0.61      0.64      0.62       390
+                fast food       0.00      0.00      0.00       474
+                    pizza       0.94      0.69      0.80       332
+                  mexican       0.92      0.79      0.85       321
+          hotels & travel       0.54      0.92      0.68       345
+               sandwiches       0.88      0.07      0.13       308
+   american (traditional)       0.42      0.08      0.13       406
+     arts & entertainment       0.26      0.64      0.37       205
+              hair salons       0.94      0.27      0.41       245
+             coffee & tea       0.93      0.12      0.21       117
+                  doctors       0.93      0.03      0.06       400
+                  burgers       0.80      0.05      0.09       266
+                  italian       0.63      0.26      0.37       218
+              auto repair       0.85      0.21      0.34       386
+            home & garden       0.00      0.00      0.00       376
+              nail salons       0.99      0.31      0.47       258
+                  chinese       0.94      0.18      0.30       244
+              real estate       0.00      0.00      0.00       251
+           american (new)       0.48      0.09      0.15       137
+                     pets       1.00      0.29      0.45       266
+    fitness & instruction       1.00      0.07      0.14        96
+       breakfast & brunch       0.71      0.31      0.43       164
+                  grocery       0.00      0.00      0.00       240
+                   hotels       0.75      0.96      0.84       236
+                 dentists       1.00      0.04      0.08       251
+         women's clothing       0.00      0.00      0.00       132
+           specialty food       0.00      0.00      0.00       102
+                 bakeries       0.00      0.00      0.00       106
+ice cream & frozen yogurt       1.00      0.01      0.02        94
+       financial services       0.00      0.00      0.00       132
+                    cafes       0.00      0.00      0.00        29
+    professional services       0.00      0.00      0.00       110
+        general dentistry       0.00      0.00      0.00       199
+             pet services       0.00      0.00      0.00       125
+             hair removal       0.00      0.00      0.00        58
+                 japanese       0.75      0.08      0.14        75
+               apartments       0.00      0.00      0.00       183
+                     pubs       0.00      0.00      0.00        50
+
+              avg / total       0.71      0.53      0.55     19132
+
+DONE..
+'run_OneVsRest' 23.30 sec
