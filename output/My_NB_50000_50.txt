@@ -1,0 +1,66 @@
+'load_data' 127.84 sec
+Done loading data, actual feature size: (40000L, 50L)
+Running OneVsRest(ours) with My_NaiveBayes
+0 / 50 fitted
+30 / 50 fitted
+0.049926
+the hamming loss:
+>>   0.049926
+hamming loss(library): 0.049926
+                           precision    recall  f1-score   support
+
+              restaurants       0.85      0.84      0.85      2651
+                 shopping       0.59      0.90      0.71      1727
+                     food       0.61      0.69      0.65      1208
+            beauty & spas       0.70      0.85      0.77       870
+         health & medical       0.92      0.76      0.84       898
+            home services       0.76      0.30      0.43       721
+                nightlife       0.42      0.82      0.55       507
+               automotive       0.71      0.77      0.74       525
+                     bars       0.36      0.80      0.50       415
+           local services       0.03      0.01      0.02       489
+              active life       0.30      0.54      0.39       376
+                  fashion       0.10      0.10      0.10       516
+event planning & services       0.20      0.50      0.28       323
+                fast food       0.04      0.05      0.05       425
+                    pizza       0.57      0.54      0.55       316
+                  mexican       0.86      0.73      0.79       288
+          hotels & travel       0.26      0.89      0.40       290
+               sandwiches       0.04      0.07      0.05       295
+   american (traditional)       0.05      0.12      0.07       204
+     arts & entertainment       0.18      0.69      0.28       255
+              hair salons       0.31      0.17      0.22       270
+             coffee & tea       0.04      0.07      0.06       299
+                  doctors       0.18      0.05      0.08       326
+                  burgers       0.01      0.04      0.02       160
+                  italian       0.22      0.42      0.29       230
+              auto repair       0.45      0.29      0.35       196
+            home & garden       0.02      0.01      0.01       217
+              nail salons       0.17      0.06      0.09       245
+                  chinese       0.07      0.19      0.10       166
+              real estate       0.00      0.00      0.00       207
+           american (new)       0.00      0.01      0.01       154
+                     pets       0.20      0.16      0.18       173
+    fitness & instruction       0.01      0.01      0.01       155
+       breakfast & brunch       0.05      0.22      0.09       141
+                  grocery       0.07      0.05      0.05       175
+                   hotels       0.18      0.91      0.31       141
+                 dentists       0.05      0.02      0.03       217
+         women's clothing       0.00      0.00      0.00       208
+           specialty food       0.03      0.08      0.05       144
+                 bakeries       0.04      0.16      0.06       114
+ice cream & frozen yogurt       0.02      0.03      0.02       137
+       financial services       0.00      0.00      0.00       187
+                    cafes       0.06      0.30      0.10        96
+    professional services       0.00      0.00      0.00       137
+        general dentistry       0.00      0.00      0.00       144
+             pet services       0.00      0.00      0.00       110
+             hair removal       0.00      0.00      0.00        80
+                 japanese       0.04      0.06      0.05        65
+               apartments       0.00      0.00      0.00       107
+                     pubs       0.02      0.12      0.04        98
+
+              avg / total       0.44      0.50      0.45     18398
+
+DONE..
+'run_OneVsRest' 15.50 sec
