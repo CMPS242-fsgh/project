@@ -1,0 +1,51 @@
+,precision    r,Recall,F1-score
+restaurants,0.83,0.97,0.89
+shopping,0.6,0.86,0.71
+food,0.7,0.69,0.7
+beauty & spas,0.84,0.96,0.89
+health & medical,0.87,0.74,0.8
+home services,0.76,0.8,0.78
+nightlife,0.63,0.68,0.65
+automotive,0.68,0.84,0.75
+bars,0.6,0.66,0.63
+local services,0.92,0.13,0.23
+active life,0.79,0.68,0.74
+fashion,0.47,0.09,0.16
+event planning & services,0.45,0.43,0.44
+fast food,0.05,0.01,0.02
+pizza,0.62,0.6,0.61
+mexican,0.91,0.73,0.81
+hotels & travel,0.42,0.82,0.56
+sandwiches,0.78,0.07,0.12
+american (traditional),0.41,0.08,0.13
+arts & entertainment,0.35,0.52,0.42
+hair salons,0.91,0.56,0.7
+coffee & tea,0.29,0.16,0.21
+doctors,0.85,0.11,0.2
+burgers,0.68,0.17,0.27
+italian,0.3,0.37,0.33
+auto repair,0.8,0.41,0.55
+home & garden,0.08,0,0.01
+nail salons,0.95,0.51,0.67
+chinese,0.71,0.25,0.37
+real estate,1,0.01,0.01
+american (new),0.35,0.15,0.21
+pets,0.92,0.28,0.43
+fitness & instruction,0.99,0.27,0.43
+breakfast & brunch,0.33,0.34,0.33
+grocery,0,0,0
+hotels,0.38,0.94,0.54
+dentists,1,0.02,0.05
+women's clothing,0,0,0
+specialty food,0.05,0.01,0.02
+bakeries,0.22,0.08,0.11
+ice cream & frozen yogurt,0.23,0.01,0.02
+financial services,0,0,0
+cafes,0.09,0.08,0.09
+professional services,0,0,0
+general dentistry,0,0,0
+pet services,0.75,0.01,0.03
+hair removal,1,0,0.01
+japanese,0.88,0.27,0.41
+apartments,0,0,0
+pubs,0.03,0.05,0.03
