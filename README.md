@@ -10,6 +10,7 @@ CMPS242 Project
         --library     [optional]  Use library implementation instead of ours
 
 2. Choose one of feature vecterizer (ues -f)
+
         -f My_dict                Our implementation of dictionary vectorizer
         -f LIB_count              Counting vectorizer from sklearn
         -f LIB_hash               Hashing vectorizer from sklearn
@@ -18,11 +19,13 @@ CMPS242 Project
         --bigram                  Use bigram instead of unigram
 
 3. Control the data size
+
         -N       [default 50000]  size of training
         -Nt      [default 10000]  size of testing
         -D       [default 100]   size of labels
 
 4. Classifier options for OneVsRest:
+
         -c My_NaiveBayes
         -c My_Logistic
         -c LIB_NB
@@ -32,4 +35,18 @@ CMPS242 Project
 
 #Archievements:
 
-1. Code from scratch:
+1. Code from scratch(Depend on scipy only):
+
+* OneVsRest algorithm
+
+* Label Powerset
+
+* Multi Label k Nearest Neighbor
+
+* Naive Bayes binary classifier
+
+* Logistic Regression binary classifier
+
+2. Better performance than Naive Bayes implementation in sklearn
+
+3. Aglorithm works entire yelp data (4 GiB)
